@@ -7,6 +7,7 @@ from flask_sqlalchemy import SQLAlchemy
 from numpy import genfromtxt
 import csv
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy import create_engine
 
 app=Flask(__name__)
 
@@ -33,31 +34,35 @@ class Branches(db.Model):
     district = db.Column(db.String(50), unique=False)
     state = db.Column(db.String(26), unique=False)
 
+# if not (db.engine.has_table('banks') and db.engine.has_table('branches')):
+#         db.create_all()
+        
+
+
 # class bank_branches(mysql.Model):
 
-df = pd.read_csv('bank_branches.csv', delimiter=',')
+# df = pd.read_csv('bank_branches.csv', delimiter=',')
 
+col_list = ["bank_name", "bank_id"]
+df = pd.read_csv('bank_branches.csv', delimiter=",", usecols=col_list).unique()
+engine = create_engine('mysql+pymysql://root:root@127.0.0.1:3306/flask_app_db')
+df.to_sql("banks", engine)
 #specified columns we want to import and covert it to list
-columns=df.columns
-df_data=df[columns]
-records=df_data.values.tolist()
-temp=records[1]
-# db.banks.bank_name=temp[7]
+# columns=df.columns
+# df_data=df[columns]
+# # records=df_data.values.tolist()
+# print(df)
+# for row in records:
+#     db.session.add(Banks(bank_name=row[7],bank_id=row[1]))
+#     db.session.commit()
+    
 
-# abc = banks(temp[7], temp[1])
+
+
+
+# abc = Banks(bank_name=temp[7],  bank_id=temp[1])
 # db.session.add(abc)
 # db.session.commit()
-   
-# @app.route('/populate_data' , methods=['POST'])
-# def populate_data():
-#     conn=db.connect()
-#     conn.cursor()
-#     with open('bank_branches.csv','rb') as f:
-#         df=pd.read_csv(f,na_filter=False)
-#         bank_dict=df.to_dict(orient='records')
-#         for bank in bank_dict:
-
-
 # Given a bank branch IFSC code, get branch details
 # @app.route('/ifsc/<ifsc_code>')
 # def ifsc_get(ifsc_code):
@@ -80,7 +85,6 @@ temp=records[1]
 
 # if __name__=='__main__':
 # 	app.run(debug=True)
-
 
 
 
