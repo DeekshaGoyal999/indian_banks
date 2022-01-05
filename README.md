@@ -44,7 +44,7 @@ http://localhost:5000/ifsc/<ifsc>
     ]
 }
   
-# To get bank branches deatils using bank name and bank city
+# To get bank branches details using bank name and bank city
   http://localhost:5000/bank_name/<bank_name>/city/<city>
   
     For e.g.
